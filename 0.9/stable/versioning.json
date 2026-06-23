@@ -1,5 +1,5 @@
 {
-  "buildTime": "2026-06-23T01:56:30.143Z",
+  "buildTime": "2026-06-23T02:19:43.560Z",
   "builtWith": {
     "toolchain": "1.0.0-alpha.92",
     "types": "1.0.0-alpha.92"
@@ -12,7 +12,7 @@
     {
       "name": "Kavita",
       "description": "Kavita client extension for Paperback. Authenticate with your username and password.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "icon": "icon.png",
       "language": "en",
       "contentRating": "SAFE",
