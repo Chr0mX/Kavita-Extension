@@ -61,8 +61,9 @@ export async function performSearch(
 
   // Empty query with no filters: surface recently added series (server paginated).
   if (!query.title && includedTags.length === 0) {
-    const recent = await apiGet<KavitaSeries[]>(
+    const recent = await apiPost<KavitaSeries[]>(
       `/Series/recently-added-v2?PageNumber=${page + 1}&PageSize=${pageSize}`,
+      {},
     );
     const items = recent.filter((s) => !excludedLibraries.has(s.libraryId ?? -1)).map(seriesTile);
     return { items, metadata: items.length === 0 ? undefined : { page: page + 1 } };

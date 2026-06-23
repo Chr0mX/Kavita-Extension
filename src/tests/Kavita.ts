@@ -26,5 +26,14 @@ export async function runTests(logger: TestLogger) {
     },
   });
 
+  // Exercise every discover section (On Deck / Recently Added / Recently
+  // Updated / per-library) to ensure none of them error.
+  suite.test("getDiscoverSectionItems", async () => {
+    const sections = await Kavita.getDiscoverSections();
+    for (const section of sections) {
+      await Kavita.getDiscoverSectionItems(section, undefined);
+    }
+  });
+
   await suite.run();
 }
