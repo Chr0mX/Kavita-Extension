@@ -1,12 +1,13 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* Copyright © 2026 Inkdex */
+/* Copyright © 2026 Kavita Extension Contributors */
 
 import { ContentRating, SourceIntents, type ExtensionInfo } from "@paperback/types";
 
 export default {
-  name: "Content Template",
-  description: "Template that shows the functionality of content providing extensions.",
-  version: "1.0.0-alpha.4",
+  name: "Kavita",
+  description:
+    "Kavita client extension for Paperback. Authenticate with your username and password.",
+  version: "1.0.0",
   icon: "icon.png",
   language: "en",
   contentRating: ContentRating.EVERYONE,
@@ -15,13 +16,14 @@ export default {
     SourceIntents.DISCOVER_SECTION_PROVIDING,
     SourceIntents.SEARCH_RESULT_PROVIDING,
     SourceIntents.CHAPTER_PROVIDING,
+    SourceIntents.PROGRESS_PROVIDING,
   ],
-  badges: [],
+  badges: [{ label: "Kavita", textColor: "#ffffff", backgroundColor: "#4ac694" }],
   developers: [
     {
-      name: "Celarye",
-      website: "https://celarye.dev",
-      github: "https://github.com/Celarye",
+      name: "Kavita Extension Contributors",
+      website: "https://www.kavitareader.com",
+      github: "https://github.com/chr0mx/kavita-extension",
     },
   ],
 } satisfies ExtensionInfo;
