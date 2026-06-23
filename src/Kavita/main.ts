@@ -78,8 +78,10 @@ type KavitaMetadataItem = { id: number; title: string };
 type KavitaPerson = { id: number; name: string; role: number };
 
 export class KavitaExtension implements ExtensionImpl<typeof KavitaConfig> {
+  // Kavita reader/image page requests have no file extension, so they are not
+  // detected as images; a higher allowance keeps long-chapter prefetch smooth.
   mainRateLimiter = new BasicRateLimiter("main", {
-    numberOfRequests: 8,
+    numberOfRequests: 20,
     bufferInterval: 1,
     ignoreImages: true,
   });
@@ -132,7 +134,9 @@ export class KavitaExtension implements ExtensionImpl<typeof KavitaConfig> {
 
     const libraries = await apiGet<KavitaLibrary[]>("/Library/libraries");
     for (const library of libraries) {
-      if (excludeUnsupportedLibrary && library.type === 2) continue;
+      // Book (2) and Light Novel (4) libraries are EPUB/text and cannot be
+      // rendered by Paperback's image reader, so hide them when requested.
+      if (excludeUnsupportedLibrary && (library.type === 2 || library.type === 4)) continue;
       sections.push({
         id: `library-${library.id}`,
         title: library.name,
@@ -152,16 +156,19 @@ export class KavitaExtension implements ExtensionImpl<typeof KavitaConfig> {
 
     let series: KavitaSeriesSummary[];
     if (section.id === "ondeck") {
-      series = await apiGet<KavitaSeriesSummary[]>(
+      // On Deck, Recently Added and Recently Updated are POST endpoints in Kavita.
+      series = await apiPost<KavitaSeriesSummary[]>(
         `/Series/on-deck?PageNumber=${page}&PageSize=${pageSize}`,
+        {},
       );
     } else if (section.id === "newlyadded") {
-      series = await apiGet<KavitaSeriesSummary[]>(
+      series = await apiPost<KavitaSeriesSummary[]>(
         `/Series/recently-added-v2?PageNumber=${page}&PageSize=${pageSize}`,
+        {},
       );
     } else if (section.id === "recentlyupdated") {
       // Not server paginated; fetch once and slice.
-      const all = await apiGet<KavitaSeriesSummary[]>("/Series/recently-updated-series");
+      const all = await apiPost<KavitaSeriesSummary[]>("/Series/recently-updated-series", {});
       series = all.slice((page - 1) * pageSize, page * pageSize);
     } else {
       // Library section.
@@ -291,7 +298,11 @@ export class KavitaExtension implements ExtensionImpl<typeof KavitaConfig> {
   async getChapters(sourceManga: SourceManga, sinceDate?: Date): Promise<Chapter[]> {
     void sinceDate;
     const volumes = await apiGet<KavitaVolume[]>(`/Series/volumes?seriesId=${sourceManga.mangaId}`);
+    return this.buildChapters(sourceManga, volumes);
+  }
 
+  // Builds the sorted chapter list from an already-fetched volume list.
+  private buildChapters(sourceManga: SourceManga, volumes: KavitaVolume[]): Chapter[] {
     const regular: ChapterEntry[] = [];
     const specials: ChapterEntry[] = [];
 
@@ -354,8 +365,9 @@ export class KavitaExtension implements ExtensionImpl<typeof KavitaConfig> {
   // ----- Reading progress -----
 
   async getMangaProgress(sourceManga: SourceManga): Promise<MangaProgress | undefined> {
-    const chapters = await this.getChapters(sourceManga);
+    // Fetch volumes once and derive both the chapter list and read state.
     const volumes = await apiGet<KavitaVolume[]>(`/Series/volumes?seriesId=${sourceManga.mangaId}`);
+    const chapters = this.buildChapters(sourceManga, volumes);
 
     // Map chapterId -> read state and timestamp.
     const readState = new Map<string, { read: boolean; time: Date }>();

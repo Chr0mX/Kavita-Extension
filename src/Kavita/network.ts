@@ -21,6 +21,13 @@ export class KavitaInterceptor extends PaperbackInterceptor {
       return request;
     }
 
+    // Image endpoints (covers, reader pages) authenticate via the apiKey query
+    // parameter; adding a bearer token is unnecessary and can break loading
+    // behind some reverse proxies, so leave those requests untouched.
+    if (request.url.includes("apiKey=")) {
+      return request;
+    }
+
     let authorization: string;
     try {
       authorization = await ensureToken();

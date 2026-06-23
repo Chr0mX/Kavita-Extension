@@ -43,7 +43,9 @@ export const DEFAULT_OPTIONS: KavitaOptions = {
   showOnDeck: true,
   showRecentlyUpdated: true,
   showNewlyAdded: true,
-  excludeUnsupportedLibrary: false,
+  // Hide EPUB/text (Book, Light Novel) libraries by default since Paperback's
+  // image reader cannot render them; users can opt back in from settings.
+  excludeUnsupportedLibrary: true,
   enableRecursiveSearch: false,
 };
 
