@@ -8,6 +8,15 @@ import { apiUrl, getCredentials } from "./settings";
 
 // Injects the Kavita bearer token into every API request. Image requests
 // authenticate via the apiKey query parameter and are left untouched.
+// Auth endpoints must never trigger token acquisition: they are what acquires
+// the token, so intercepting them would recurse into more auth requests.
+const AUTH_PATHS = ["/account/login", "/plugin/authenticate"];
+
+export function isAuthRequest(url: string): boolean {
+  const path = url.split("?")[0]?.toLowerCase() ?? "";
+  return AUTH_PATHS.some((authPath) => path.endsWith(authPath));
+}
+
 export class KavitaInterceptor extends PaperbackInterceptor {
   override async interceptRequest(request: Request): Promise<Request> {
     const { serverUrl } = getCredentials();
@@ -18,6 +27,10 @@ export class KavitaInterceptor extends PaperbackInterceptor {
     // Only attach credentials to calls aimed at this server's API.
     const base = apiUrl(serverUrl);
     if (!request.url.startsWith(base)) {
+      return request;
+    }
+
+    if (isAuthRequest(request.url)) {
       return request;
     }
 

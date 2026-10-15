@@ -2,6 +2,7 @@ import { type TestLogger } from "@paperback/types";
 
 import { login } from "../Kavita/auth.js";
 import { Kavita } from "../Kavita/main.js";
+import { isAuthRequest } from "../Kavita/network.js";
 import sourceInfo from "../Kavita/pbconfig.js";
 import { TestSuite, registerDefaultTests } from "./suite.js";
 
@@ -32,6 +33,22 @@ export async function runTests(logger: TestLogger) {
     const sections = await Kavita.getDiscoverSections();
     for (const section of sections) {
       await Kavita.getDiscoverSectionItems(section, undefined);
+    }
+  });
+
+  // Auth endpoints must bypass the interceptor, or token acquisition recurses.
+  suite.test("auth requests bypass interceptor", async () => {
+    const base = "https://host/api";
+    const expectations: [string, boolean][] = [
+      [`${base}/Account/login`, true],
+      [`${base}/Plugin/authenticate?apiKey=abc&pluginName=x`, true],
+      [`${base}/Library/libraries`, false],
+      [`${base}/Series/1?next=/Account/login`, false],
+    ];
+    for (const [url, expected] of expectations) {
+      if (isAuthRequest(url) !== expected) {
+        throw new Error(`isAuthRequest(${url}) should be ${expected}`);
+      }
     }
   });
 
