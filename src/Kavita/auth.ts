@@ -13,12 +13,19 @@ const PLUGIN_NAME = "Kavita-Paperback";
 // re-authenticate. `inFlight` deduplicates concurrent acquisitions within a
 // single context (single-flight).
 const TOKEN_KEY = "kavita.bearerToken";
+// Records the last failed token acquisition (shared across contexts) so queued
+// requests fail fast instead of each re-running the whole login sequence.
+const FAILURE_KEY = "kavita.authFailure";
+const FAILURE_COOLDOWN_MS = 30_000;
 let inFlight: Promise<string> | undefined;
 
 export class AuthError extends Error {
-  constructor(message: string) {
+  readonly status: number | undefined;
+
+  constructor(message: string, status?: number) {
     super(message);
     this.name = "AuthError";
+    this.status = status;
   }
 }
 
@@ -47,6 +54,34 @@ export function clearToken(): void {
   Application.setSecureState("", TOKEN_KEY);
 }
 
+function recordFailure(error: unknown): void {
+  const message = error instanceof Error ? error.message : "Authentication failed.";
+  Application.setSecureState(JSON.stringify({ at: Date.now(), message }), FAILURE_KEY);
+}
+
+function clearFailure(): void {
+  Application.setSecureState("", FAILURE_KEY);
+}
+
+// Throws the last recorded failure while it is still within the cooldown window.
+function assertNotCoolingDown(): void {
+  const raw = Application.getSecureState(FAILURE_KEY) as string | undefined;
+  if (!raw) {
+    return;
+  }
+  try {
+    const { at, message } = JSON.parse(raw) as { at: number; message: string };
+    if (Date.now() - at < FAILURE_COOLDOWN_MS) {
+      throw new AuthError(message);
+    }
+  } catch (error) {
+    if (error instanceof AuthError) {
+      throw error;
+    }
+    clearFailure();
+  }
+}
+
 // Performs a username/password login against Kavita, returning the UserDto.
 // Persists the normalized server URL, credentials and the returned API key.
 export async function login(
@@ -70,10 +105,10 @@ export async function login(
   }
 
   if (response.status === 401 || response.status === 400) {
-    throw new AuthError("Invalid username or password.");
+    throw new AuthError("Invalid username or password.", response.status);
   }
   if (response.status >= 400) {
-    throw new AuthError(`Login failed (HTTP ${response.status}).`);
+    throw new AuthError(`Login failed (HTTP ${response.status}).`, response.status);
   }
 
   const user = decodeBody(data) as KavitaUserDto | undefined;
@@ -82,6 +117,7 @@ export async function login(
   }
 
   setCredentials({ serverUrl, username, password, apiKey: user.apiKey });
+  clearFailure();
   // Cache the freshly issued JWT when present; otherwise drop any stale token so
   // the next request mints one from the API key.
   if (user.token) {
@@ -97,13 +133,28 @@ async function authenticateWithApiKey(apiKey: string): Promise<string> {
   const { serverUrl } = getCredentials();
   const base = apiUrl(serverUrl);
 
-  const [response, data] = await Application.scheduleRequest({
-    url: `${base}/Plugin/authenticate?apiKey=${encodeURIComponent(apiKey)}&pluginName=${PLUGIN_NAME}`,
-    method: "POST",
-  });
+  let response;
+  let data;
+  try {
+    [response, data] = await Application.scheduleRequest({
+      url: `${base}/Plugin/authenticate?apiKey=${encodeURIComponent(apiKey)}&pluginName=${PLUGIN_NAME}`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "{}",
+    });
+  } catch {
+    throw new AuthError("Could not reach the Kavita server. Check the server URL and try again.");
+  }
 
+  if (response.status >= 300 && response.status < 400) {
+    const location = response.headers?.["Location"] ?? response.headers?.["location"];
+    throw new AuthError(
+      `Authentication was redirected (HTTP ${response.status}${location ? ` to ${location}` : ""}). Check the server URL for an http/https or port mismatch.`,
+      response.status,
+    );
+  }
   if (response.status >= 400) {
-    throw new AuthError(`Authentication failed (HTTP ${response.status}).`);
+    throw new AuthError(`Authentication failed (HTTP ${response.status}).`, response.status);
   }
 
   const result = decodeBody(data) as { token?: string } | undefined;
@@ -113,27 +164,46 @@ async function authenticateWithApiKey(apiKey: string): Promise<string> {
   return `Bearer ${result.token}`;
 }
 
-// Acquires a token from the API key, falling back to a full re-login if the key
-// was revoked. The result is written to shared state.
-async function acquireToken(): Promise<string> {
+async function acquireTokenUncached(): Promise<string> {
   const credentials = getCredentials();
   if (!credentials.serverUrl || !credentials.apiKey) {
     throw new AuthError("Kavita is not configured. Open the source settings and log in.");
   }
 
   try {
-    const token = await authenticateWithApiKey(credentials.apiKey);
+    return await authenticateWithApiKey(credentials.apiKey);
+  } catch (error) {
+    // Only re-login when the server rejected the API key itself (revoked or
+    // rotated). Network errors, redirects and 5xx responses are not fixed by a
+    // login, so they surface as-is.
+    const keyRejected =
+      error instanceof AuthError && (error.status === 401 || error.status === 403);
+    if (!keyRejected || !credentials.username || !credentials.password) {
+      throw error;
+    }
+
+    // Single re-login attempt; login() caches the JWT it is given.
+    await login(credentials.serverUrl, credentials.username, credentials.password);
+    const cached = getStoredToken();
+    if (cached) {
+      return cached;
+    }
+    return authenticateWithApiKey(getCredentials().apiKey);
+  }
+}
+
+// Acquires a token from the API key, falling back to one re-login if the key
+// was revoked. The result is written to shared state; failures are remembered
+// for a short cooldown.
+async function acquireToken(): Promise<string> {
+  assertNotCoolingDown();
+  try {
+    const token = await acquireTokenUncached();
     setStoredToken(token);
+    clearFailure();
     return token;
   } catch (error) {
-    // The API key may have been revoked; silently re-login with stored credentials.
-    if (credentials.username && credentials.password) {
-      await login(credentials.serverUrl, credentials.username, credentials.password);
-      const refreshed = getCredentials();
-      const token = await authenticateWithApiKey(refreshed.apiKey);
-      setStoredToken(token);
-      return token;
-    }
+    recordFailure(error);
     throw error;
   }
 }

@@ -7,7 +7,7 @@ export default {
   name: "Kavita",
   description:
     "Kavita client extension for Paperback. Authenticate with your username and password.",
-  version: "1.0.2",
+  version: "1.0.3",
   icon: "icon.png",
   language: "en",
   contentRating: ContentRating.EVERYONE,
