@@ -1,0 +1,35 @@
+name: Landing Page
+
+on:
+  push:
+    branches:
+      - "0.9/stable"
+    paths:
+      - "site/**"
+      - ".github/workflows/landing-page.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: landing-page
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy Landing Page
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v6
+      # Publishes to the root of gh-pages and keeps the per-branch bundle
+      # directories (e.g. 0.9/stable) that Bundle and Deploy writes.
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: site
+          keep_files: true
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
