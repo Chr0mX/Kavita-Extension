@@ -1,19 +1,152 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0; url=./0.9/stable/" />
-    <link rel="canonical" href="https://chr0mx.github.io/Kavita-Extension/0.9/stable/" />
-    <title>Kavita Extension</title>
-    <script>
-      window.location.replace("./0.9/stable/");
-    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#fff5fa" />
+    <meta
+      name="description"
+      content="A Paperback 0.9 extension that turns your Kavita server into a content source. Browse, search, read and sync progress."
+    />
+    <title>Kavita for Paperback</title>
+    <link rel="icon" href="icon.png" type="image/png" />
+    <link
+      rel="preload"
+      href="fonts/quicksand-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <p>
-      Redirecting to the Kavita extension repository&hellip; If you are not
-      redirected automatically, follow
-      <a href="./0.9/stable/">https://chr0mx.github.io/Kavita-Extension/0.9/stable/</a>.
-    </p>
+    <a
+      href="https://github.com/chr0mx/kavita-extension"
+      id="github-link"
+      target="_blank"
+      rel="noopener"
+      aria-label="GitHub Repository"
+    >
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+        />
+      </svg>
+    </a>
+
+    <header id="top">
+      <img class="site-logo" src="icon.png" alt="Kavita extension logo" width="96" height="96" />
+      <span class="header-sparkle" aria-hidden="true">🌸 ✨ 🍡</span>
+      <h1><span class="main-heading">Kavita for Paperback</span></h1>
+      <p class="main-description">
+        A <a href="https://paperback.moe" target="_blank" rel="noopener">Paperback</a> 0.9 extension
+        that turns your
+        <a href="https://www.kavitareader.com" target="_blank" rel="noopener">Kavita</a>
+        server into a content source. Browse libraries, search, read and sync progress.
+      </p>
+    </header>
+
+    <main>
+      <div class="note note-compat">
+        <p>
+          💡 <b>Requires Paperback 0.9.</b> This extension does not work on 0.8, the version from
+          the App Store.
+        </p>
+      </div>
+
+      <section class="repo-card" aria-labelledby="repo-title">
+        <div class="repo-top">
+          <div class="repo-left">
+            <div class="repo-title-row">
+              <h2 class="repo-name" id="repo-title">Kavita Extension</h2>
+              <span class="repo-version-badge">0.9</span>
+            </div>
+            <span class="repo-url" id="repo-url"
+              >https://chr0mx.github.io/Kavita-Extension/0.9/stable</span
+            >
+          </div>
+          <div class="repo-actions">
+            <button type="button" class="repo-add" id="copy-url">Copy repo URL</button>
+            <a
+              class="repo-github"
+              href="https://github.com/chr0mx/kavita-extension"
+              target="_blank"
+              rel="noopener"
+              aria-label="View on GitHub"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <details class="note note-how" open>
+        <summary>
+          <span>📲 How do I install it?</span>
+          <svg class="summary-chevron" viewBox="0 0 1024 1024" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M831.872 340.864 512 652.672 192.128 340.864a30.592 30.592 0 0 0-42.752 0 29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.6 30.592 30.592 0 0 0-42.752 0z"
+            />
+          </svg>
+        </summary>
+        <div class="how-body">
+          <ol>
+            <li>Open Paperback and go to <b>Settings → Extensions → Add Repository</b>.</li>
+            <li>Paste the repo URL above (use <b>Copy repo URL</b>).</li>
+            <li>Install the <b>Kavita</b> extension from the list.</li>
+            <li>
+              Open the extension settings, enter your <b>Server URL</b>, <b>Username</b> and
+              <b>Password</b>, then tap <b>Log In / Test Connection</b>.
+            </li>
+          </ol>
+          <p class="how-foot">
+            Want to try it first? Use the public demo server
+            <code>https://demo.kavitareader.com</code> with username <code>demouser</code> and
+            password <code>Demouser64</code>.
+          </p>
+        </div>
+      </details>
+
+      <h2 class="section-title">Features</h2>
+      <ul class="feature-grid">
+        <li class="feature">
+          <span aria-hidden="true">🔑</span><b>Simple login</b>Username and password. No API key to
+          copy by hand.
+        </li>
+        <li class="feature">
+          <span aria-hidden="true">🌟</span><b>Discover</b>On Deck, Recently Updated, Newly Added
+          and one section per library.
+        </li>
+        <li class="feature">
+          <span aria-hidden="true">🔍</span><b>Search</b>Title search plus filters for genres, tags
+          and people.
+        </li>
+        <li class="feature">
+          <span aria-hidden="true">📚</span><b>Series &amp; chapters</b>Metadata, cover art, and
+          volume and chapter browsing.
+        </li>
+        <li class="feature">
+          <span aria-hidden="true">🔄</span><b>Progress sync</b>Reading progress and per-series
+          rating or review.
+        </li>
+        <li class="feature">
+          <span aria-hidden="true">🙈</span><b>Your choice</b>Optional recursive search; hide book
+          and novel libraries.
+        </li>
+      </ul>
+    </main>
+
+    <footer>
+      <span class="footer-hearts" aria-hidden="true">💗 💜 💙</span>
+      An unofficial community extension. Not affiliated with Kavita or Paperback.
+    </footer>
+
+    <script src="site.js"></script>
   </body>
 </html>

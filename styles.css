@@ -1,0 +1,473 @@
+/* Soft kawaii, light only. Quicksand is self-hosted (SIL OFL). */
+
+@font-face {
+  font-family: "Quicksand";
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url("fonts/quicksand-latin-ext.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Quicksand";
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url("fonts/quicksand-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --bg: #fff5fa;
+  --bg-blush: #ffe7f3;
+  --bg-mint: #e6fbf7;
+  --bg-lilac: #f1ebff;
+  --card: #ffffff;
+  --fg: #4a3350;
+  --gray: #9c86a8;
+  --border: #ffd9ec;
+  --border-soft: #ffe9f4;
+  --pink: #ff7ab8;
+  --pink-deep: #f0559c;
+  --cyan: #4fd3e0;
+  --lilac: #b08bf0;
+  --shadow: 0 6px 18px rgba(255, 122, 184, 0.13);
+  --shadow-hover: 0 10px 26px rgba(255, 122, 184, 0.22);
+  --radius: 1.25rem;
+}
+
+html {
+  color-scheme: light;
+  font-family: "Quicksand", "Nunito", system-ui, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--fg);
+  background:
+    radial-gradient(1000px 420px at 12% -8%, var(--bg-blush) 0%, transparent 62%),
+    radial-gradient(820px 380px at 92% 4%, var(--bg-mint) 0%, transparent 58%),
+    radial-gradient(760px 420px at 50% 102%, var(--bg-lilac) 0%, transparent 60%), var(--bg);
+  background-attachment: fixed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+a {
+  color: var(--pink-deep);
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------- header --- */
+
+header {
+  max-width: 760px;
+  margin: 2.5rem auto 1.2em;
+  padding: 1.5rem 1.5rem 0;
+  text-align: center;
+}
+
+.site-logo {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 0.75em;
+  border: 2px solid rgba(255, 255, 255, 0.86);
+  border-radius: 25px;
+  box-shadow:
+    0 10px 26px rgba(255, 122, 184, 0.2),
+    0 4px 14px rgba(79, 211, 224, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.header-sparkle {
+  display: block;
+  font-size: 1.6em;
+  letter-spacing: 0.35em;
+  margin-bottom: 0.35em;
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+header > h1 {
+  font-size: 2.6em;
+  font-weight: 700;
+  margin: 0 0 0.25em;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.main-heading {
+  background: linear-gradient(120deg, #ff7ab8 0%, #b08bf0 48%, #4fd3e0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.main-description {
+  color: var(--gray);
+  font-size: 1.06em;
+  font-weight: 500;
+  margin: 0 auto;
+  line-height: 1.6;
+  max-width: 560px;
+}
+
+#github-link {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--pink-deep);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow);
+  transition:
+    transform 0.16s,
+    box-shadow 0.16s;
+}
+
+#github-link svg {
+  width: 21px;
+  height: 21px;
+  fill: currentColor;
+}
+
+#github-link:hover,
+#github-link:focus-visible {
+  transform: rotate(-8deg) scale(1.05);
+  box-shadow: var(--shadow-hover);
+}
+
+@media (max-width: 640px) {
+  header > h1 {
+    font-size: 2em;
+  }
+}
+
+/* --------------------------------------------------------------- main --- */
+
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.note {
+  margin: 0 0 1em;
+  padding: 0.85em 1.1em;
+  background: var(--card);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.note > p {
+  margin: 0;
+}
+
+.note-compat {
+  background: var(--bg-lilac);
+  border-color: #dccbff;
+}
+
+.note-how {
+  padding: 0;
+  margin-top: 1em;
+}
+
+.note-how > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6em;
+  padding: 0.85em 1.1em;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.note-how > summary::-webkit-details-marker {
+  display: none;
+}
+
+.note-how > summary:focus-visible,
+.repo-add:focus-visible,
+.repo-github:focus-visible,
+#github-link:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+.summary-chevron {
+  width: 1em;
+  height: 1em;
+  transition: transform 0.18s;
+}
+
+.note-how[open] .summary-chevron {
+  transform: rotate(180deg);
+}
+
+.how-body {
+  padding: 0 1.1em 1em;
+}
+
+.how-body ol {
+  margin: 0 0 0.8em;
+  padding-left: 1.3em;
+}
+
+.how-body li {
+  margin: 0.35em 0;
+}
+
+.how-body li::marker {
+  color: var(--pink-deep);
+  font-weight: 800;
+}
+
+.how-foot {
+  margin: 0;
+  color: var(--gray);
+  font-size: 0.92em;
+}
+
+code {
+  padding: 0.1em 0.4em;
+  border-radius: 0.5em;
+  background: var(--bg-blush);
+  color: var(--fg);
+  font-size: 0.92em;
+  word-break: break-all;
+}
+
+/* -------------------------------------------------------------- card --- */
+
+.repo-card {
+  margin-bottom: 1em;
+  background: var(--card);
+  border: 2px solid var(--border-soft);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.repo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border);
+}
+
+.repo-top {
+  display: flex;
+  align-items: center;
+  gap: 0.85em;
+  padding: 0.95em 1.1em;
+}
+
+.repo-left {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 0.18em;
+}
+
+.repo-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  flex-wrap: wrap;
+}
+
+.repo-name {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.06em;
+}
+
+.repo-version-badge {
+  padding: 0.15em 0.6em;
+  border-radius: 999px;
+  font-size: 0.7em;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: linear-gradient(120deg, #59d4e6, #78dfc1);
+  box-shadow: 0 2px 7px rgba(79, 211, 224, 0.28);
+}
+
+.repo-url {
+  color: var(--gray);
+  font-size: 0.74em;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.repo-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  flex: 0 0 auto;
+}
+
+.repo-add {
+  padding: 0.65em 1.1em;
+  font: inherit;
+  font-size: 0.78em;
+  font-weight: 800;
+  white-space: nowrap;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--pink) 0%, var(--lilac) 100%);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 122, 184, 0.35);
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    filter 0.16s ease;
+}
+
+.repo-add:hover,
+.repo-add:focus-visible {
+  transform: translateY(-1px) scale(1.03);
+  filter: brightness(1.05);
+  box-shadow: 0 6px 16px rgba(255, 122, 184, 0.45);
+}
+
+.repo-github {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--bg-blush);
+  color: var(--pink-deep);
+  transition:
+    background 0.16s,
+    transform 0.16s;
+}
+
+.repo-github svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+}
+
+.repo-github:hover,
+.repo-github:focus-visible {
+  background: var(--border);
+  transform: rotate(-8deg);
+}
+
+@media (max-width: 520px) {
+  .repo-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .repo-actions {
+    justify-content: space-between;
+  }
+}
+
+/* ---------------------------------------------------------- features --- */
+
+.section-title {
+  margin: 1.8em 0 0.7em;
+  font-size: 1.3em;
+  text-align: center;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.8em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  padding: 1em 1.1em;
+  background: var(--card);
+  border: 2px solid var(--border-soft);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  color: var(--gray);
+  font-size: 0.92em;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.feature > span {
+  font-size: 1.5em;
+}
+
+.feature > b {
+  color: var(--fg);
+  font-size: 1.05em;
+}
+
+/* ------------------------------------------------------------ footer --- */
+
+footer {
+  max-width: 760px;
+  margin: 2.5em auto 0;
+  padding: 1.4em 1.5rem 2.5em;
+  border-top: 2px dashed var(--border);
+  color: var(--gray);
+  font-size: 0.88em;
+  font-weight: 500;
+  line-height: 1.6;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.footer-hearts {
+  display: block;
+  margin-bottom: 0.5em;
+  font-size: 1.15em;
+  letter-spacing: 0.3em;
+}
