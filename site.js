@@ -16,6 +16,6 @@ button?.addEventListener("click", async () => {
     button.textContent = "Press copy ✂️";
   }
   setTimeout(() => {
-    button.textContent = "Copy repo URL";
+    button.textContent = "Copy URL";
   }, 2000);
 });
