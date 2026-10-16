@@ -471,3 +471,83 @@ footer {
   font-size: 1.15em;
   letter-spacing: 0.3em;
 }
+
+/* ------------------------------------------------- repository page --- */
+
+.repo-add-big {
+  margin-top: 1.2em;
+  font-size: 1em;
+  padding: 0.75em 1.6em;
+}
+
+.repo-add:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+a.repo-add {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.source-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.source-logo {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(255, 122, 184, 0.2);
+}
+
+.source-description {
+  margin: 0.2em 0 0;
+  color: var(--gray);
+  font-size: 0.88em;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em;
+  margin-top: 0.45em;
+}
+
+.chip {
+  padding: 0.15em 0.65em;
+  border-radius: 999px;
+  background: var(--bg-blush);
+  color: var(--pink-deep);
+  font-size: 0.72em;
+  font-weight: 700;
+}
+
+.rating-safe {
+  background: var(--bg-mint);
+  color: #2f9c7d;
+}
+
+.rating-mature {
+  background: #fff4d6;
+  color: #b07a00;
+}
+
+.rating-18 {
+  background: #ffe1e1;
+  color: #d03b3b;
+}
+
+.repo-add-soft {
+  background: var(--bg-blush);
+  color: var(--pink-deep);
+  box-shadow: none;
+}
